@@ -7,7 +7,7 @@ Time::Time():
 
 Time::Time(std::string cid, std::string pid, std::string amount):
     c_map(), p_map(), c_count(0), p_count(0){
-    std::vector<std::string> temp = split(pid, ':');
+    std::vector<std::string> temp = split(pid, ';');
     for(int j = 0; j < atoi(amount.c_str()); j++) {
         for(unsigned int i = 0; i < temp.size(); i++) {
             insertToPMap(temp[i]);
@@ -18,7 +18,7 @@ Time::Time(std::string cid, std::string pid, std::string amount):
 
 void Time::setTime(std::string cid, std::string pid, std::string amount) {
 
-    std::vector<std::string> temp = split(pid, ':');
+    std::vector<std::string> temp = split(pid, ';');
     for(int j = 0; j < atoi(amount.c_str()); j++) {
         for(unsigned short i = 0; i < temp.size(); i++) {
             insertToPMap(temp[i]);

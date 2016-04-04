@@ -14,6 +14,8 @@ public:
     void insertToPMap(std::string);
     float getCMap(std::string s) { return c_map[s]; }
     float getPMap(std::string s) { return p_map[s]; }
+    std::unordered_map<std::string, float> getCMap(){return c_map;}
+    std::unordered_map<std::string, float> getPMap(){return p_map;}
 
     void cal_probability();  // normalize the count to probability
 private:

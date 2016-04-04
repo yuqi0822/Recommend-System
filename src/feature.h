@@ -13,6 +13,7 @@
 #include "string.h"
 #include "sstream"
 #include "line.h"
+#include "time.h"
 class Feature{
 private:
 	fileIO &fIO;
@@ -52,9 +53,9 @@ public:
 				//line[6]: time
 				//line[7]: birthday
 				//line[8]: lable
-				cout<<"userid"<<":"<<line[0]<<","<<"catid"<<line[2]<<
-							",proid"<<":"<<line[4]<<",amount"<<line[5]<<",time"<<"line[6]"
-									<<",birthday:"<<line[7]<<",lable:"<<line[8]<<endl;
+//				cout<<"userid"<<":"<<line[0]<<","<<"catid"<<line[2]<<
+//							",proid"<<":"<<line[4]<<",amount"<<line[5]<<",time"<<"line[6]"
+//									<<",birthday:"<<line[7]<<",lable:"<<line[8]<<endl;
 				std::unordered_map<string,Line*>::iterator it = matrix.find(line[0]);
 				if(it==matrix.end())
 				{
@@ -62,6 +63,24 @@ public:
 				}else{
 					matrix[line[0]]->setLine(line[2],line[4],line[5],line[6],line[8]);
 				}
+			}
+		}
+	}
+	void printMatrix(){
+		for(auto item:matrix)
+		{
+			cout<<"userid:"<<item.first<<endl;
+			unordered_map<string,Time*> line = (item.second)->getLine();
+				for(auto time:line){
+					cout<<"timeid="<<time.first<<endl;
+					std::unordered_map<std::string, float> mapc = (time.second)->getCMap();
+					std::unordered_map<std::string, float> mapp = (time.second)->getPMap();
+					for(auto c : mapc){
+						cout<<"c_id="<<c.first<<",count:"<<c.second<<endl;
+					}
+					for(auto p : mapp){
+						cout<<"p_id="<<p.first<<",count:"<<p.second<<endl;
+					}
 			}
 		}
 	}
