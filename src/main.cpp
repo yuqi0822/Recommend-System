@@ -6,7 +6,7 @@
  */
 #include "feature.h"
 int main(){
-	Feature f("test_sample.csv");
+	Feature f("test_sample1.csv");
 	f.initialFeature();
 	f.printMatrix();
 	return 0;
