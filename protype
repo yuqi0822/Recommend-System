@@ -1,0 +1,6 @@
+
+ctor:Line(string catid,string propid,string amount,string time);
+void setLine(string catid,string propid,string amount,string time);
+
+ctor:Time(string catid,string propid,string amount)
+setTime(string catid,string propid,string amount)
