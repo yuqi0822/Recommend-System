@@ -1,6 +1,13 @@
+class Line{
+	//string lable;
+	//unoreded_map<time_id,Time>;
+public:
+	Line(string catid,string propid,string amount,string time,string lable){}
+	void setLine(string catid,string propid,string amount,string time,string lable){}
+};
 
-ctor:Line(string catid,string propid,string amount,string time,string lable);
-void setLine(string catid,string propid,string amount,string time,string label);
-
-ctor:Time(string catid,string propid,string amount)
-setTime(string catid,string propid,string amount)
+class Time{
+public:
+  ctor:Time(string catid,string propid,string amount);
+  setTime(string catid,string propid,string amount);
+};
