@@ -20,10 +20,13 @@ public:
 	unordered_map<string,Time*> getLine(){
 		return line;
 	}
+	int getLabel(){
+		return label;
+	}
 
 private:
 	std::unordered_map<std::string,Time*> line;
-	string label;
+	int label;
 };
 
 #endif
