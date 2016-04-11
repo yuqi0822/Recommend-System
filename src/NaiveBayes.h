@@ -90,16 +90,15 @@ public:
 		for(auto line:matrix_test){
 			stringstream str("");
 			str<<line.first<<",";
-			cout << line.first << endl;
-			cout << line.second << endl;
-			cout << (line.second)->getLable();
+
+			cout << "label:" << (line.second)->getLable() << endl;
 			vector<double> f = (line.second)->getFeature();
 
 			for(auto i:f){
 				cout<<i<<",";
 			}
 			cout<<endl;
-		/*	int maxlable = 0;
+			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++){
 				int total = lableMatrix[l].size();
@@ -114,7 +113,7 @@ public:
 				result[l] *= pcon;
 				if(max<result[l]) {max=result[l];maxlable = l;}
 			}
-			str<<maxlable;*/
+			str<<maxlable;
 			fIO.writeLine(str.str());
 		}
 	}

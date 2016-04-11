@@ -21,22 +21,12 @@ public:
 	void setLine(string cid,string pid,string a,string t,string l);
 
 	vector<double> getFeature() {
-		cout <<"++++" << line.size() << endl;
         for(auto time:line) {
-        	cout << "===============" << endl;
             for(auto cid:(time.second)->getCMap()) {
-            	//cout<<"cid.first:"<<cid.first<<",cid.second"<<cid.second;
-            	//cout << "vecLength" << vecLength  << endl;
-            	//cout<<"vecMap:"<<vecMap[cid.first] <<",dateMap:"<<time.first<<endl;
-            	//vec[vecMap[cid.first] + dateMap[(time.first).substr(0,4)]*vecLength] = cid.second;
-
                 vec[vecMap[cid.first] + dateMap[(time.first).substr(0,4)]*vecLength] = cid.second;
-
-                // cout<<"vecMap:"<<vecMap[cid.first] <<",dateMap:"<<dateMap[(time.first).substr(0,4)]<<endl;
             }
 
             for(auto pid:(time.second)->getPMap()) {
-
                 vec[vecMap[pid.first] + dateMap[(time.first).substr(0,4)]*vecLength] = pid.second;
             }
         }
