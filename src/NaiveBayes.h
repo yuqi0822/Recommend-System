@@ -12,6 +12,7 @@
 #include "feature.h"
 #include "line.h"
 #include "cmath"
+#include "tool/printMatrix.h"
 
 class NaiveBayes{
 private:
@@ -34,7 +35,7 @@ public:
 		initialLableMatrix();
 	}
 	unordered_map<string,Line*> transformFeatureVector(string filename){
-		f_t->printMatrix();
+		Printer::printFeatureMatrix(*f_t);
 		return f_t->getMatrix();
 	}
 	void initialLableMatrix(){
@@ -42,32 +43,6 @@ public:
 		for(auto p:matrix){
 			lableMatrix[(p.second)->getLable()].insert({p.first,p.second});
 		}
-//		//print
-//		for(auto p:lableMatrix){
-//			cout<<"label:"<<p.first<<endl;
-//			unordered_map<string,Line*> hashmap = p.second;
-//			for (auto p2 : hashmap) {
-//				cout << "userid:" << p2.first;
-//				unordered_map<string,Time*> line = (p2.second)->getLine();
-//				for (auto time : line) {
-//					cout << "timeid=" << time.first << endl;
-//					(time.second)->cal_probability();
-//					cout << "prob:" << endl;
-//					std::unordered_map<std::string, float> mapc =
-//							(time.second)->getCMap();
-//					std::unordered_map<std::string, float> mapp =
-//							(time.second)->getPMap();
-//					for (auto c : mapc) {
-//						cout << "c_id=" << c.first << ",count:" << c.second
-//								<< endl;
-//					}
-//					for (auto p : mapp) {
-//						cout << "p_id=" << p.first << ",count:" << p.second
-//								<< endl;
-//					}
-//				}
-//			}
-//		}
 	}
 	double calcPLable(int lable){
 		int countLable = lableMatrix[lable].size();
@@ -83,21 +58,13 @@ public:
 		for(int l=0;l<lableNum;l++){
 			result[l] = calcPLable(l);
 		}
-		cout<<"matrix_test:"<<matrix_test.size()<<endl;
 		string head = "UsereId,Label";
 		fIO.setNameW(resultFile);
 		fIO.writeLine(head);         //write the head of the file
 		for(auto line:matrix_test){
 			stringstream str("");
 			str<<line.first<<",";
-
-			cout << "label:" << (line.second)->getLable() << endl;
 			vector<double> f = (line.second)->getFeature();
-
-			for(auto i:f){
-				cout<<i<<",";
-			}
-			cout<<endl;
 			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++){

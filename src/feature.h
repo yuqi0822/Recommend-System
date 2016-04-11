@@ -99,39 +99,5 @@ public:
 			}
 			dataSize = matrix.size();
 		}
-
-	void printMatrix(){
-		for(auto item:matrix)
-		{
-			cout<<endl<<"userid:"<<item.first<<endl;
-			unordered_map<string,Time*> line = (item.second)->getLine();
-				for(auto time:line){
-
-					cout<<"timeid="<<time.first<<endl;
-
-//					std::unordered_map<std::string, float> mapc = (time.second)->getCMap();
-//					std::unordered_map<std::string, float> mapp = (time.second)->getPMap();
-//					for(auto c : mapc){
-//						cout<<"c_id="<<c.first<<",count:"<<c.second<<endl;
-//					}
-//					for(auto p : mapp){
-//						cout<<"p_id="<<p.first<<",count:"<<p.second<<endl;
-//					}
-
-
-					(time.second)->cal_probability();
-					cout<<"prob:"<<endl;
-					std::unordered_map<std::string, float> mapc = (time.second)->getCMap();
-					std::unordered_map<std::string, float> mapp = (time.second)->getPMap();
-					for(auto c : mapc){
-						cout<<"c_id="<<c.first<<",count:"<<c.second<<endl;
-					}
-					for(auto p : mapp){
-						cout<<"p_id="<<p.first<<",count:"<<p.second<<endl;
-					}
-
-			}
-		}
-	}
 };
 #endif /* FEATURE_H_ */

@@ -10,8 +10,6 @@ Utils::Utils(std::string file): fr(fileIO::getIntance()), fileName(file) {
     tMax = atoi(fr.readLine().c_str());
     cat_num = atoi(fr.readLine().c_str());
     pro_num = atoi(fr.readLine().c_str());
-
-    std::cout << cat_num << "  " << pro_num << std::endl;
     vec.reserve(cat_num+pro_num);
 
     std::string temp = fr.readLine();
