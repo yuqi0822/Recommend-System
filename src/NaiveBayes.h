@@ -32,7 +32,7 @@ public:
 			testFile(file1),resultFile(file2),threshold(t),f(new Feature(trainFile)),f_t(0)
 				,fIO(fileIO::getIntance()),util(Utils::getInstance("index.csv")),lableMatrix(),
 				condProb(vector<vector<vector<double>>>(util.getLabelNum(),
-						vector<vector<double>>(util.getFeatureDim(),vector<double>(10,1)))){
+						vector<vector<double>>>(util.getFeatureDim(),vector<double>(10,1)))){
 		f->initialFeature();
 		f_t = new Feature(testFile);
 		f_t->initialFeature2();
@@ -105,13 +105,13 @@ public:
 			fIO.writeLine(str.str());
 		}
 	}
-	void predict_NaiveBayes(){
+	void predict_NaiveBayes() {
 		unordered_map<string,Line*> matrix_test = transformFeatureVector(testFile);
 		unordered_map<string,Line*> matrix_sample = f->getMatrix();
-		map<int,double> result;
 		int lableNum = util.getLabelNum();
+		map<int,double> probLable;
 		for(int l=0;l<lableNum;l++) {
-			result[l] = calcPLable(l);
+			probLable[l] = calcPLable(l);
 		}
 		string head = "UsereId,Label";
 		fIO.setNameW(resultFile);
@@ -120,6 +120,7 @@ public:
 			stringstream str("");
 			str<<line.first<<",";
 			vector<double> f = (line.second)->getFeature();
+			map<int,double> result(probLable.begin(),probLable.end());
 			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++) {
