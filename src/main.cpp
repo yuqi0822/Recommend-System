@@ -13,7 +13,7 @@ int main(){
 	Utils::getInstance(mapFileName);
 	double thredhold=0.8;
 	NaiveBayes nb(trainFile,testFile,resultFile,thredhold);
-	nb.predict();
+	nb.predict_Similarity();
 	return 0;
 }
 

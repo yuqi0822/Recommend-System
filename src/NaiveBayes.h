@@ -13,7 +13,8 @@
 #include "line.h"
 #include "cmath"
 #include "tool/printMatrix.h"
-
+#include "tool/utils.h"
+#include "vector"
 class NaiveBayes{
 private:
 	string trainFile;
@@ -23,12 +24,15 @@ private:
 	Feature * f;
 	Feature * f_t;
 	fileIO &fIO;
-	int lableNum;
+	Utils& util;
 	map<int,unordered_map<string,Line*>> lableMatrix;
+	vector<vector<vector<double>>> condProb; // lable , feature , value
 public:
 	NaiveBayes(string file0,string file1,string file2,double t):trainFile(file0),
 			testFile(file1),resultFile(file2),threshold(t),f(new Feature(trainFile)),f_t(0)
-				,fIO(fileIO::getIntance()),lableNum(4),lableMatrix(){
+				,fIO(fileIO::getIntance()),util(Utils::getInstance("index.csv")),lableMatrix(),
+				condProb(vector<vector<vector<double>>>(util.getLabelNum(),
+						vector<vector<double>>(util.getFeatureDim(),vector<double>(10,1)))){
 		f->initialFeature();
 		f_t = new Feature(testFile);
 		f_t->initialFeature2();
@@ -44,19 +48,36 @@ public:
 			lableMatrix[(p.second)->getLable()].insert({p.first,p.second});
 		}
 	}
+	void CalcCondProb(){
+		int lableNum = util.getLabelNum();
+		int featureNum = util.getFeatureDim();
+		for(int i=0;i<lableNum;i++){
+			unordered_map<string,Line*> m = lableMatrix[i];
+			for(auto p:m){
+				vector<double> f = (p.second)->getFeature();
+				for(int j=0;j<featureNum;j++){
+					condProb[i][j][f[j]]++;
+				}
+			}
+			for(int j=0;j<featureNum;j++){
+				for(int k=0;k<10;k++){
+					condProb[i][j][k]/=lableMatrix[i].size();
+				}
+			}
+		}
+	}
 	double calcPLable(int lable){
 		int countLable = lableMatrix[lable].size();
 		int total = f->getDataSize();
 		return (double)countLable/total;
 	}
-	void predict(){
+	void predict_Similarity(){
 		unordered_map<string,Line*> matrix_test =  transformFeatureVector(testFile);
 		unordered_map<string,Line*> matrix_sample = f->getMatrix();
-
-
-		map<int,double> result;
+		int lableNum = util.getLabelNum();
+		map<int,double> probLable;
 		for(int l=0;l<lableNum;l++){
-			result[l] = calcPLable(l);
+			probLable[l] = calcPLable(l);
 		}
 		string head = "UsereId,Label";
 		fIO.setNameW(resultFile);
@@ -65,13 +86,13 @@ public:
 			stringstream str("");
 			str<<line.first<<",";
 			vector<double> f = (line.second)->getFeature();
+			map<int,double> result(probLable.begin(),probLable.end());
 			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++){
 				int total = lableMatrix[l].size();
 				int count = 0;
 				for(auto line:lableMatrix[l]){
-
 					if(isSimilarity(f,(line.second)->getFeature())){
 						count++;
 					}
@@ -84,7 +105,39 @@ public:
 			fIO.writeLine(str.str());
 		}
 	}
-
+	void predict_NaiveBayes(){
+		unordered_map<string,Line*> matrix_test = transformFeatureVector(testFile);
+		unordered_map<string,Line*> matrix_sample = f->getMatrix();
+		map<int,double> result;
+		int lableNum = util.getLabelNum();
+		for(int l=0;l<lableNum;l++) {
+			result[l] = calcPLable(l);
+		}
+		string head = "UsereId,Label";
+		fIO.setNameW(resultFile);
+		fIO.writeLine(head); //write the head of the file
+		for(auto line:matrix_test) {
+			stringstream str("");
+			str<<line.first<<",";
+			vector<double> f = (line.second)->getFeature();
+			int maxlable = 0;
+			double max = 0;
+			for(int l=0;l<lableNum;l++) {
+				int total = lableMatrix[l].size();
+				int count = 0;
+				for(auto line:lableMatrix[l]) {
+					if(isSimilarity(f,(line.second)->getFeature())) {
+						count++;
+					}
+				}
+				double pcon = (double)count / total;
+				result[l] *= pcon;
+				if(max<result[l]) {max=result[l];maxlable = l;}
+			}
+			str<<maxlable;
+			fIO.writeLine(str.str());
+		}
+	}
 	void setThreshold(double tsd) {
 	    threshold = tsd;
 	}
@@ -106,8 +159,6 @@ public:
 	    } else if(vec1.size() < vec2.size()) {
 	        vec1.resize(vec2.size());
 	    } else ;
-
-
 	    double result, dotProduct = 0, vecMode1 = 0, vecMode2 = 0;
 	    unsigned int i;
 	    for(i = 0; i < vec1.size(); i++) {
