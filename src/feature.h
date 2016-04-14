@@ -73,6 +73,13 @@ public:
 			}
 		}
 		dataSize = matrix.size();
+
+		for (auto p2 : matrix) {
+			unordered_map<string, Time*> line = (p2.second)->getLine();
+			for (auto time : line) {
+				(time.second)->cal_probability();
+			}
+		}
 	}
 	void initialFeature2(){
 			string temp = fIO.readLine(); //read the colums name,which we don't need
@@ -98,6 +105,12 @@ public:
 				}
 			}
 			dataSize = matrix.size();
+			for (auto p2 : matrix) {
+				unordered_map<string, Time*> line = (p2.second)->getLine();
+				for (auto time : line) {
+					(time.second)->cal_probability();
+				}
+			}
 		}
 };
 #endif /* FEATURE_H_ */

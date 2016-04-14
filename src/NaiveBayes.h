@@ -2,7 +2,7 @@
  * NaiveBayes.h
  *
  *  Created on: 2016-4-9
- *      Author: Yuqi Zhang
+ *  Author: Yuqi Zhang
  */
 #ifndef NAIVEBAYES_H_
 #define NAIVEBAYES_H_
@@ -27,13 +27,12 @@ private:
 	Utils& util;
 	map<int,double> probLable;
 	map<int,unordered_map<string,Line*>> lableMatrix;
-	vector<vector<vector<double>>> condProb; // lable , feature , value
+	vector<vector<double>> condProb; // lable , feature , value
 public:
 	NaiveBayes(string file0,string file1,string file2,double t):trainFile(file0),
 			testFile(file1),resultFile(file2),threshold(t),f(new Feature(trainFile)),f_t(0)
 				,fIO(fileIO::getIntance()),util(Utils::getInstance("index.csv")),probLable(),lableMatrix(),
-				condProb(vector<vector<vector<double>>>(util.getLabelNum(),
-						vector<vector<double>>(util.getFeatureDim(),vector<double>(10,1)))){
+				condProb(vector<vector<double>>(util.getLabelNum(),vector<double>(util.getFeatureDim(),1))){
 		f->initialFeature();
 		f_t = new Feature(testFile);
 		f_t->initialFeature2();
@@ -42,7 +41,8 @@ public:
 		for(int l=0;l<lableNum;l++){
 			probLable[l] = calcPLable(l);
 		}
-		//CalcCondProb();
+
+		CalcCondProb();
 	}
 	unordered_map<string,Line*> transformFeatureVector(){
 		//Printer::printFeatureMatrix(*f_t);
@@ -62,13 +62,11 @@ public:
 			for(auto p:m){
 				vector<double> f = (p.second)->getFeature();
 				for(int j=0;j<featureNum;j++){
-					condProb[i][j][f[j]*(10-(0.01))]++;
+					condProb[i][j] += f[j]*1;
 				}
 			}
 			for(int j=0;j<featureNum;j++){
-				for(int k=0;k<10;k++){
-					condProb[i][j][k]/=lableMatrix[i].size();
-				}
+				condProb[i][j]/=lableMatrix[i].size();
 			}
 		}
 	}
@@ -88,10 +86,10 @@ public:
 			stringstream str("");
 			str<<line.first<<",";
 			vector<double> f = (line.second)->getFeature();
-			map<int,double> result(probLable.begin(),probLable.end());
 			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++){
+				map<int,double> result(probLable.begin(),probLable.end());
 				int total = lableMatrix[l].size();
 				int count = 0;
 				for(auto line:lableMatrix[l]){
@@ -119,13 +117,15 @@ public:
 			stringstream str("");
 			str<<line.first<<",";
 			vector<double> f = (line.second)->getFeature();
-			map<int,double> result(probLable.begin(),probLable.end());
 			int maxlable = 0;
 			double max = 0;
 			for(int l=0;l<lableNum;l++) {
+				map<int,double> result(probLable.begin(),probLable.end());
+				//for(int l=0;l<lableNum;l++){cout<<result[l]<<endl;}
 				for(int j=0;j<featureNum;j++){
-					result[l] *= condProb[l][j][f[j]*(10-(0.01))];
+					result[l] *= log2(2+condProb[l][j]*f[j]);
 				}
+				//cout<<l<<":"<<result[l];
 				if(max<result[l]){max=result[l];maxlable = l;}
 			}
 			str<<maxlable;

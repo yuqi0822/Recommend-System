@@ -1,6 +1,7 @@
 #include "time.h"
 #include <cstdlib>
 #include <sstream>
+using namespace std;
 Time::Time():
     c_map(), p_map(), c_count(0), p_count(0){
 }

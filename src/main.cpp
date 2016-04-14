@@ -9,8 +9,8 @@
 #include <ctime>
 
 int main(){
-		string trainFile="trainning.csv",testFile="test.csv",resultFile="output.csv";
-		string mapFileName="index.csv";
+		string trainFile="newtraining.csv",testFile="newtraining.csv",resultFile="output.csv";
+		string mapFileName="newindex.csv";
 		Utils::getInstance(mapFileName);
 
 	    double elapsed_train,elapsed_predict;
@@ -23,19 +23,19 @@ int main(){
 
 
 		//turn off CalcCondProb() in ctor of naiveBayes.h to use predict_Similarity();
-		begin = clock();
-		nb.predict_Similarity();
-		end = clock();
-		elapsed_predict = double(end - begin) / CLOCKS_PER_SEC;
-		cout<<"predict spends "<<elapsed_predict<<" seconds."<<endl;
+//		begin = clock();
+//		nb.predict_Similarity();
+//		end = clock();
+//		elapsed_predict = double(end - begin) / CLOCKS_PER_SEC;
+//		cout<<"predict spends "<<elapsed_predict<<" seconds."<<endl;
 
 		//turn on CalcCondProb() in ctor of naiveBayes.h to use predict_NaiveBayes();
 
-		/*begin = clock();
+		begin = clock();
 		nb.predict_NaiveBayes();
 		end = clock();
 		elapsed_predict = double(end - begin) / CLOCKS_PER_SEC;
-		cout << "predict spends " << elapsed_predict << " seconds." << endl;*/
+		cout << "predict spends " << elapsed_predict << " seconds." << endl;
 
 		cout << "The sum time is " << elapsed_predict + elapsed_train << " seconds."
 			 << endl;
